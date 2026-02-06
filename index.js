@@ -41,6 +41,12 @@ async function run() {
     const database = client.db("gymDB");
     const scheduleCollection = database.collection("scheduleColl");
 
+    // === get/read method ===
+    app.get("/schedules", async (req, res) => {
+      const result = await scheduleCollection.find().toArray();
+      res.send(result);
+    });
+
     // === post/create method ===
     app.post("/createSchedules", async (req, res) => {
       const data = req.body;
