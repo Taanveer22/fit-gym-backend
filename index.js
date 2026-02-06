@@ -11,7 +11,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 // 02
 const app = express();
@@ -51,6 +51,13 @@ async function run() {
     app.post("/createSchedules", async (req, res) => {
       const data = req.body;
       const result = await scheduleCollection.insertOne(data);
+      res.send(result);
+    });
+
+    // === delete method ===
+    app.delete("/schedules/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) };
+      const result = await scheduleCollection.deleteOne(query);
       res.send(result);
     });
 
