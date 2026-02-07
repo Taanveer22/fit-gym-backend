@@ -41,9 +41,16 @@ async function run() {
     const database = client.db("gymDB");
     const scheduleCollection = database.collection("scheduleColl");
 
-    // === get/read method ===
+    // === get/read method for all schedules ===
     app.get("/schedules", async (req, res) => {
       const result = await scheduleCollection.find().toArray();
+      res.send(result);
+    });
+
+    // === get/read method for one schedule ===
+    app.get("/schedules/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) };
+      const result = await scheduleCollection.findOne(query);
       res.send(result);
     });
 
@@ -51,6 +58,21 @@ async function run() {
     app.post("/createSchedules", async (req, res) => {
       const data = req.body;
       const result = await scheduleCollection.insertOne(data);
+      res.send(result);
+    });
+
+    // === patch/update method ===
+    app.patch("/schedules/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) };
+      const update = {
+        $set: {
+          title: req.body.title,
+          day: req.body.day,
+          time: req.body.time,
+          date: req.body.date,
+        },
+      };
+      const result = await scheduleCollection.updateOne(query, update);
       res.send(result);
     });
 
