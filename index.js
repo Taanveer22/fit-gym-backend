@@ -76,6 +76,18 @@ async function run() {
       res.send(result);
     });
 
+    // === patch/update method ===
+    app.patch("/status/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) };
+      const update = {
+        $set: {
+          isCompleted: true,
+        },
+      };
+      const result = await scheduleCollection.updateOne(query, update);
+      res.send(result);
+    });
+
     // === delete method ===
     app.delete("/schedules/:id", async (req, res) => {
       const query = { _id: new ObjectId(req.params.id) };
