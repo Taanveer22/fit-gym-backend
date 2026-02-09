@@ -43,7 +43,12 @@ async function run() {
 
     // === get/read method for all schedules ===
     app.get("/schedules", async (req, res) => {
-      const result = await scheduleCollection.find().toArray();
+      const { search } = req.query;
+      let filter = {};
+      if (search) {
+        filter = { title: { $regex: search, $options: "i" } };
+      }
+      const result = await scheduleCollection.find(filter).toArray();
       res.send(result);
     });
 
